@@ -1,0 +1,12 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "sample\\": "src/sample",
+            "nosqldb\\": "src/nosqldb",
+            "lib\\": "src/lib"
+        }
+    }
+}
