@@ -66,8 +66,8 @@ class Document
         if ($this->isDocument()) {
             throw new \Exception('must extends class Document');
         }
-        $id = $this->_id;
-        $rev = $this->_rev;
+        $id = $this->id;
+        $rev = $this->rev;
         $db = $this->getDB();
 
         $path = "/{$db}/{$id}";
@@ -77,6 +77,7 @@ class Document
         $response = $connection->delete($path, [], $body, $headers);
         $parser = $this->getResponseParser();
         $parser->deleteParser($response);
+        return $this;
     }
 
     public function update()
@@ -84,8 +85,8 @@ class Document
         if ($this->isDocument()) {
             throw  new \Exception('must extends class Document');
         }
-        $id = $this->_id;
-        $rev = $this->_rev;
+        $id = $this->id;
+        $rev = $this->rev;
         $db = $this->getDB();
 
         $path = "/{$db}/{$id}";
@@ -94,7 +95,9 @@ class Document
         $headers = ['If-Match' => $rev];
 
         $response = $connection->put($path, [], $body, $headers);
-        var_dump($response);
+        $parser = $this->getResponseParser();
+        $parser->createParser($response);
+        return $this;
     }
 
     public static function findById($id)
@@ -108,6 +111,7 @@ class Document
 
         $db = $document->getDB();
         $path = "/{$db}/{$id}";
+
         $connection = $document->getConnection();
         $response = $connection->get($path);
         $parser = $document->getResponseParser();

@@ -61,9 +61,6 @@ class DocumentParser
         $fun($document, $bodyObj);
     }
 
-    public function updateParser()
-    {
-    }
 
     public function findParser($response)
     {

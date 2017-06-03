@@ -1,5 +1,5 @@
 <?php
-namespace sample;
+namespace sample\document;
 
 class Order extends \nosqldb\Document
 {
@@ -27,7 +27,7 @@ class Order extends \nosqldb\Document
         //                         'flags'     => FILTER_FORCE_ARRAY,
         //                         'options'   => array('min_range' => 1, 'max_range' => 10)
         //                        ),
-        // 'customerName'     => FILTER_SANITIZE_ENCODED,
+        'customerName'     => FILTER_SANITIZE_ENCODED,
         // 'customerId' => [
         //                   'filter' => FILTER_VALIDATE_REGEXP
         //                 ],
