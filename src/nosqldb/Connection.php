@@ -29,6 +29,11 @@ class Connection
         return $this->send('delete', $path, $args, $body, $headers);
     }
 
+    public function head($path, $args = [], $body = null, $headers = [])
+    {
+        return $this->send('head', $path, $args, $body, $headers);
+    }
+
     private function getBasicUrlScheme()
     {
         return [
