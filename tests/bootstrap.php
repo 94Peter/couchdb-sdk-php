@@ -3,7 +3,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Phalcon\Di\FactoryDefault;
 
-define('DB_HOST', '192.168.99.100');
+define('DB_HOST', 'couchdb');
 define('DB_PORT', '5984');
 
 $di = new FactoryDefault();
