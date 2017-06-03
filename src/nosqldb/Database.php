@@ -27,7 +27,7 @@ class Database
 
         // check db name is valid.
         $pattern = '/^[a-z][a-z0-9_$()+\\\\-]*$/';
-        if (preg_match($pattern, $dbname) === 0) {
+        if (preg_match($pattern, $db) === 0) {
             throw new \Exception('DB name must math ' . $pattern . '. DB name is: ' . $db);
         }
 
