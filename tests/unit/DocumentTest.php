@@ -3,14 +3,22 @@ use PHPUnit\Framework\TestCase;
 
 class DocumentTest extends TestCase
 {
-  private function getConnect()
-  {
-    return new nosqldb\Connection(DB_HOST, DB_PORT);
-  }
+    private $database = null;
+    protected function setUp()
+    {
+         $doc = new sample\Order();
+         $this->database = new nosqldb\Database($doc);
+         $this->database->create();
+    }
+
+    protected function tearDown()
+    {
+        $this->database->delete();
+    }
+
     public function testCreate()
     {
         $document = new sample\Order();
-        $document->setConnection($this->getConnect());
 
         $document->orderNo = 'O1112';
         $document->amount = 3;

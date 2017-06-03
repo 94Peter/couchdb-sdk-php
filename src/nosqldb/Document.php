@@ -18,12 +18,7 @@ class Document
         return $this->responseParser;
     }
 
-    public function setConnection($connection)
-    {
-        $this->connection = $connection;
-    }
-
-    protected function getConnection()
+    public function getConnection()
     {
         if (isset($this->connection) === false) {
             $di = \Phalcon\Di::getDefault();
