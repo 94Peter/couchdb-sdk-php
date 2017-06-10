@@ -1,7 +1,7 @@
 <?php
 namespace nosqldb;
 
-class ModelDoc extends \Phalcon\Mvc\Model
+abstract class ModelDoc extends \Phalcon\Mvc\Model
 {
     protected $id;
 
@@ -32,20 +32,24 @@ class ModelDoc extends \Phalcon\Mvc\Model
         }
     }
 
-    public function beforeCreate()
+    abstract protected function documentToModel();
+
+    public function beforeValidationOnCreate()
     {
         $document = $this->getDocument();
         $document->create();
         $this->id = $this->getDocValue('id');
         $this->rev = $this->getDocValue('rev');
+        $this->documentToModel();
     }
 
-    public function beforeUpdate()
+    public function beforeValidationOnUpdate()
     {
         $document = $this->getDocument();
         $document->update();
         $this->id = $this->getDocValue('id');
         $this->rev = $this->getDocValue('rev');
+        $this->documentToModel();
     }
 
     public function getDocValue($key)
@@ -83,6 +87,5 @@ class ModelDoc extends \Phalcon\Mvc\Model
         $this->settingAry = [];
         return $document;
     }
-
 
 }
