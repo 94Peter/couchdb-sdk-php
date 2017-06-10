@@ -17,7 +17,7 @@ class DatabaseTest extends TestCase
 
     public function testCreateIsExistDelete()
     {
-        $doc = new sample\Order();
+        $doc = new sample\document\Order();
         $database = new nosqldb\Database($doc);
 
         $isExist = $database->isExist();

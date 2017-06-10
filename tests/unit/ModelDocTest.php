@@ -3,6 +3,35 @@ use PHPUnit\Framework\TestCase;
 
 class ModelDocTest extends TestCase
 {
+    private $database = null;
+    protected function setUp()
+    {
+        $doc = new sample\document\Order();
+        $this->database = new nosqldb\Database($doc);
+
+        if ($this->database->isExist() === false) {
+            $this->database->create();
+        }
+
+        $di = \Phalcon\Di::getDefault();
+        $connection = $di->getShared('db');
+
+        $model = new sample\model\Order();
+        $tableName = $model->getSource();
+        $isOrderExists = $connection->tableExists($tableName);
+
+        if ($isOrderExists === true) {
+            $connection->dropTable($tableName);
+        }
+
+        $connection->createTable($tableName, null, $model->tableDefinition());
+    }
+
+    protected function tearDown()
+    {
+         $this->database->delete();
+    }
+
     public function testSaveUpdateDelete()
     {
         $order = $this->save();
@@ -21,10 +50,10 @@ class ModelDocTest extends TestCase
         $order->save();
 
         $id = $order->id;
+        $this->assertNotNull($id);
 
         $orderDoc = sample\document\Order::findById($id);
         $this->assertSame($id, $orderDoc->id);
-
         return $order;
     }
 
