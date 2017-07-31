@@ -147,20 +147,77 @@ class Document
         return $arr;
     }
 
-    private function filterData()
+    public function filterData()
     {
         $filter =  $this->getValidationFilter();
         if ($filter === null) {
             return;
         }
         $data = $this->getArgs();
-        $input = filter_var_array($data, $filter);
-        foreach ($input as $key => $value) {
-            if ($value === null && $this->isColumnsRequired($key)) {
-                throw new \Exception('colomn \'' . $key . '\' is required.');
+        $data = $this->validateObject($data, true, $filter);
+        return $data;
+    }
+
+    // private function validateField($value, $required, $filter, $option = null)
+    // {
+    //     return
+    // }
+
+    private function validateObject($obj, $required, $schema)
+    {
+        if ($required && empty($obj) === true) {
+            return false;
+        }
+
+        $newObj = [];
+        foreach ($schema as $key => $setting) {
+            $value = $obj[$key];
+            $type  = $setting['type'];
+            $required = (isset($setting['required']))? $setting['required'] : false;
+
+            if ($type === 'objArray') {
+                $schema = $setting['schema'];
+                $value = $this->validateObjArray($value, $required, $schema);
+                if ($required && $value === false) {
+                    throw new \Exception('miss Object Array: ' . $key);
+                }
+            } elseif ($type === 'object') {
+                $schema = $setting['schema'];
+                $value = $this->validateObject($value, $required, $schema);
+                if ($required && $value === false) {
+                    throw new \Exception('miss object: ' . $key);
+                }
+            } else {
+                $filter = $setting['filter'];
+                $options = $setting['options'];
+                $value = filter_var($value, $filter, $options);
+                if ($required && $value === false && $filter !== FILTER_VALIDATE_BOOLEAN) {
+                    throw new \Exception('miss column: ' . $key);
+                }
+                if ($required && empty($value) && $filter === FILTER_SANITIZE_ENCODED) {
+                    throw new \Exception('miss column: ' . $key);
+                }
+            }
+            $newObj[$key] = $value;
+        }
+        return $newObj;
+    }
+
+    private function validateObjArray($objAry, $required, $schema)
+    {
+        if ($required && empty($objAry) === true) {
+            return false;
+        }
+        $newObj = [];
+        foreach ($objAry as $obj) {
+            $result = $this->validateObject($obj, true, $schema);
+            if ($result === false) {
+                throw new \Exception('object schema error: ' . PHP_EOL . json_encode($obj));
+            } else {
+                $newObj[] = $result;
             }
         }
-        return $input;
+        return $newObj;
     }
 
     private function isColumnsRequired($column)

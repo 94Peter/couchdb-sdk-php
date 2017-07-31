@@ -15,11 +15,38 @@ $di->setShared(
     }
 );
 
-$doc = new sample\Order();
+$doc = new sample\document\Order();
+// var_dump($doc->getValidationFilter());
+
+
+
 $doc->orderNo = 'O1112';
 $doc->amount = 3;
-$doc->dd = 'bb';
+$doc->gst = 5;
+$doc->Customer = [
+                  'ee' => 'bb',
+                  'name' => 'my name',
+                 ];
+$doc->Accounting = [
+                    'isPay' => true,
+                    'payDate' => '2011-09-22',
+                   ];
+$doc->Products = [
+                  [
+                    'name'  => 'table',
+                    'qty'   => 10,
+                    'price' => 100,
+                  ],
+                  [
+                    'name'  => 'table2',
+                    'qty'   => 15,
+                    'price' => 1000,
+                  ]
+                 ];
 
+$value = $doc->filterData();
+var_dump($value);
+exit();
 //$doc->create();
 
 // --------------------------------------
